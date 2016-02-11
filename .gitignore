@@ -33,7 +33,7 @@ captures/
 
 # LaTeX files
 *.aux
-*.synctex.gz
+*.synctex*
 *.out
 *.bbl
 *.blg
@@ -43,3 +43,11 @@ captures/
 *.ind
 *.toc
 *.pdf
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lol
+*.lot
+*.nav
+*.snm

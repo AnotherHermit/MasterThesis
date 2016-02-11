@@ -13,33 +13,29 @@
 
 \usepackage{mythesis}
 
-
 \begin{document}
-\selectlanguage{swedish}
-\makeFrontPage%
+\selectlanguage{english}
+\makeFrontPage% Only to supress chktex warning
 \frontmatter
 \maketitle
-\makeLibraryPage{\input{svensk-sammanfattning}}
+\makeLibraryPage{\input{en-abstract}}
 
-\begin{abstract}[swedish]
-  \input{svensk-sammanfattning}
-\end{abstract}
 \begin{abstract}[english]
-  \input{engelsk-sammanfattning}
+  \input{en-abstract}
 \end{abstract}
-\input{tack}
+\input{thanks}
 \tableofcontents
 \input{notation}
 
 \mainmatter%
-\input{introduktion}
-\input{resultat}
-\input{avrundning}
+
+\input{introduction}
+\input{results}
+\input{conclusion}
 
 \part*{Appendix}
 \appendix
-\input{detaljer}
-\input{rtthesis-doc}
+\input{details}
 
 \backmatter%
 
