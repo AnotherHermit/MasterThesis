@@ -1,31 +1,24 @@
 \setupThesis{
   author={Conrad Wahlén},
-  swetitle={Beräkningar på mobila GPU:er},
+  swetitle={Global illuminering på mobila enheter},
   swesubtitle={},
-  title={Computations on Mobile GPUs},
+  title={Global Illumination on Mobile Units},
   subtitle={},
   year=2016,
-  month=7,
-  day=1,
   type=msc,
-  subject={Computer Vision},
-  division={Department of Electrical Engineering},
+  subject={Electrical Engineering},
+  division={Division of Information},
   department=isy,
   examiner={Ingemar Ragnemalm \AT \textsc{isy}, Linköpings universitet},
-  supervisor={Doktorand Si \AT \textsc{isy}, Linköpings universitet \AND Ingenjör Så \AT Företaget},
-  keywords={problem, lösning},
+  supervisor={Doktorand Si \AT \textsc{isy}, Linköpings universitet \AND Ingenjör Så \AT Company},
+  keywords={global, illumination, mobile, android},
   isrn=LiTH-ISY-EX-{}-YY/NNNN-{}-SE,
   url={http://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-XXXXX},
-  dedication={}
-}
-
-%%% Define the abstract that goes on the library page here.  This makes it easy to get the same text in two places.
-\newcommand{\myabstract}{%
+  dedication={To myself, nobody likes me as much as I do.}
 }
 
 %%% Since macros that define notation may be useful also to produce figures, these macros are kept in a separate file.
 \RequirePackage{mynotation}
-
 
 %%% Setup for natbib (natbib is loaded by rtthesis).
 \AtBeginDocument{%
@@ -46,13 +39,8 @@
 \newcommand{\Warning}[2][Warning]{\marginpar{\fcolorbox{Warning}{white}{\begin{minipage}{\linewidth}\textbf{\textcolor{Warning}{\emph{#1:}}}\par \tiny \sf #2\end{minipage}}}}
 
 
-%%% Customize captions.
-\captionsetup[table]{position=bottom}% Some say that this should be 'top'.  This overrides the default of rtthesis.cls!
-
-
 %%% Define font size command to use for all verbatim environments.
 \newcommand{\verbatimsize}{\small}
-
 
 %%% Define some convenient referencing commands.
 \newcommand{\chapterref}[1]{\hyperref[#1]{kapitel~\ref*{#1}}}

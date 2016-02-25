@@ -15,15 +15,15 @@
 
 \begin{document}
 \selectlanguage{english}
-\makeFrontPage% Only to supress chktex warning
 \frontmatter
 \maketitle
-\makeLibraryPage{\input{en-abstract}}
 
 \begin{abstract}[english]
   \input{en-abstract}
 \end{abstract}
+
 \input{thanks}
+
 \tableofcontents
 \input{notation}
 
@@ -36,6 +36,8 @@
 \part*{Appendix}
 \appendix
 \input{details}
+
+\clearemptydoublepage%
 
 \backmatter%
 

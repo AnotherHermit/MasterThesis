@@ -1,8 +1,11 @@
-*.iml
 .gradle
 /local.properties
 /.idea/workspace.xml
-/.idea/libraries
 .DS_Store
 /build
-/captures
+Caverna_Regeln_DE.pdf
+Caverna_Rules_EN.pdf
+Caverna_Appendix_V2.pdf
+app/*.apk
+.idea
+*.iml
