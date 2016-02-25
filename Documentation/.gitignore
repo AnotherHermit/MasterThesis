@@ -1,0 +1,20 @@
+# LaTeX files
+*.aux
+*.synctex*
+*.out
+*.bbl
+*.blg
+*.brf
+*.idx
+*.ilg
+*.ind
+*.toc
+*.pdf
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lol
+*.lot
+*.nav
+*.snm

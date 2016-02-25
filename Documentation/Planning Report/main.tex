@@ -1,6 +1,7 @@
 \documentclass[a4paper, 12pt]{article}
 \usepackage[utf8]{inputenc}
 
+\usepackage[title,titletoc,toc]{appendix}
 \usepackage[ruled]{algorithm2e}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -68,24 +69,66 @@ Global Illumination on Mobile Units
 \section{Background}
 \label{sec:Background}
 
+This master's thesis will be conducted on the behalf of Mindroad.
 
+Global Illumination is \ldots
 
 \section{Problem Statement}
 \label{sec:Problem Statement}
 
-\section{Literature base}
-\label{sec:Literature base}
+The problem statements for this thesis work will be:
+
+\begin{itemize}
+  \item Is global illumination possible with reasonable results using mobile hardware?
+\end{itemize}
+
+Recent techniques used for global illumination show great promise for a real-time solution to this problem. Especially \ldots,
+
+\begin{itemize}
+  \item What compromises or adaptations has to be made on these techniques to fully utilize a different platform?
+\end{itemize}
+
+The hardware structure on the mobile platforms are quite different from the desktop variant. Using a combined memory and very limited shared memory (if at all) between GPU cores makes it necessary to adapt the code.
 
 \section{Research delimitations}
 \label{sec:Research delimitations}
 
+The thesis work is limited to 20 weeks, this means that there will be some delimitations.
+The mobile platform chosen will be Android since it's support for OpenGL and Vulcan. Android API level 23 will be used since only the latest cellphones will have access to the GPUs necessary.
+
 \section{Approach}
 \label{sec:Approach}
+
+
 
 \section{Time plan}
 \label{sec:Time plan}
 
+Project start: Week 6
+Half-time check: Week 16
+Final presentation: Week 26
+
+At the half-time check an application running on the mobile device rendering the scene should be completed. The global illumination algorithm should be well under way.
+
+The following sections of the report shall be completed:
+\begin{itemize}
+  \item Introduction
+  \item Background
+  \item Global Illumination
+  \item Framework
+\end{itemize}
+
+A detailed time plan can be found in appendix A.
 
 \bibliographystyle{plain}
 \bibliography{references}
+
+\newpage
+
+\begin{appendices}
+
+\section{Detailed time plan}
+\label{app:timeplan}
+
+\end{appendices}
 \end{document}
