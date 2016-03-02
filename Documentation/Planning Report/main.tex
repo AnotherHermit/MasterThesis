@@ -2,52 +2,16 @@
 \usepackage[utf8]{inputenc}
 
 \usepackage[title,titletoc,toc]{appendix}
-\usepackage[ruled]{algorithm2e}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{color}
-\usepackage{float}
-\usepackage{graphicx}
-\usepackage{lipsum}
-\usepackage{listings}
-\usepackage{mathtools}
-\usepackage{mathptmx}
-\usepackage{natbib}
-\usepackage{pifont}
-\usepackage{spverbatim}
 
-\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
-\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\usepackage[parfill]{parskip} % Space between paragraphs instead of indentation with this
+%\usepackage{fullpage} % Less margins with this
+%\usepackage[compact]{titlesec} % Less space around headings with this
+%\usepackage{endfloat} % Put figures last with this
 
+\usepackage{hyperref}
+\usepackage{glossaries}
 
-\usepackage[parfill]{parskip}
-%\usepackage{fullpage}
-\usepackage[compact]{titlesec}
-%\usepackage{endfloat}
-
-\usepackage[colorlinks = true,
-            linkcolor = black,
-            urlcolor  = blue,
-            citecolor = black,
-            anchorcolor = blue]{hyperref}
-
-\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
-\definecolor{mylilas}{RGB}{170,55,241}
-\definecolor{backcolor}{RGB}{230,240,255}
-
-\lstset{language=C++,
-    backgroundcolor=\color{backcolor},
-    basicstyle=\ttfamily\scriptsize,
-    breaklines=true,
-    keywordstyle=\color{blue}\ttfamily,
-    stringstyle=\color{mylilas}\ttfamily,
-    commentstyle=\color{mygreen}\ttfamily,
-    showstringspaces=false, %without this there will be a symbol in the places where there is a space
-    numbers=left,
-    stepnumber=2,
-    numberstyle={\tiny \color{black}},% size of the numbers
-    numbersep=9pt, % this defines how far the numbers are from the text
-}
+\input{glossary.tex}%
 
 \title{Planning Report \\ \small{Version 0.1}}
 \author{Conrad Wahlén \\ \texttt{conwa099@student.liu.se}}
@@ -64,14 +28,29 @@
 \label{sec:Preliminary title}
 
 The preliminary title for this master's thesis will be:
-Global Illumination on Mobile Units
+
+%TODO: Set title to method chosen
+\acrlong{gi} using \ldots in Real-Time on Mobile Devices
 
 \section{Background}
 \label{sec:Background}
 
 This master's thesis will be conducted on the behalf of Mindroad.
 
-Global Illumination is \ldots
+\gls{gi} tries to model the effects of light in a 3D scene.
+
+Illumination of a scene in computer graphics is a very computationally expensive task. In order to make a scene render in real-time a lot of development has been made to get effects that approximate certain effects without the expensive calculations.
+
+For example there are many different variants of \gls{ao} to approximate indirect lighting effects and other techniques that pre-calculate advanced lighting effects for static objects. While many of these techniques make it possible to interact with scenes that would otherwise be static or stuttering, they either have visible errors or are only possible for static objects.
+
+Recent developments in hardware along with novel ideas has made it possible to use methods previously only suitable for off-line rendering in real-time applications. For example \gls{pm}.
+
+Since the hardware in mobile devices are making great progress (still far from high-end desktop solutions) and since it has already been proven once~\cite{gimobile} it would be interesting to see how far the latest mobile generation can push global illumination on limited hardware.
+
+Global illumination tries to simulate correct lighting in a scene without using separate methods for certain effects. Rendering using \gls{pm} makes it possible to create direct and indirect light (both diffuse and specular), caustics and shadows making it one of the more popular techniques for off-line rendering when high quality is needed because it converges toward a correct solution when more photons are used.
+
+The direct light is a scene is usually quite simple and can be done for quite a few light sources with different techniques such as deferred shading or lighting. Leading to a method using \glspl{vpl} where indirect light is approximated by creating many light sources.
+
 
 \section{Problem Statement}
 \label{sec:Problem Statement}
@@ -79,29 +58,40 @@ Global Illumination is \ldots
 The problem statements for this thesis work will be:
 
 \begin{itemize}
-  \item Is global illumination possible with reasonable results using mobile hardware?
+  %TODO: Insert the actual method here
+  \item \textit{How far can we take \gls{gi} on mobile devices using \ldots?}
 \end{itemize}
 
-Previous results from~\cite{globalillusamsung} shows that global illumination is possible using techniques specifically targeted towards mobile hardware.
-
-Recent techniques used for global illumination show great promise for a real-time solution to this problem. Especially \ldots,
+Previous results from~\cite{gimobile} show that \gls{gi} in real-time is possible on mobile devices using \glspl{vpl}. While this is a different method from \ldots it does
 
 \begin{itemize}
-  \item What compromises or adaptations has to be made on these techniques to fully utilize a different platform?
+  \item \textit{What are the limiting factors of the mobile device? And are there any potential benefits on using mobile devices for \gls{gi}?}
 \end{itemize}
 
-The hardware structure on the mobile platforms are quite different from the desktop variant. Using a combined memory and very limited shared memory (if at all) between GPU cores makes it necessary to adapt the code.
+The hardware structure on the mobile platforms are quite different from the desktop variant. Using a combined memory and very limited shared memory (if at all) between \gls{gpu} cores makes it necessary to adapt the code.
+
+\begin{itemize}
+  %TODO: Insert the actual method here
+  \item \textit{Does \ldots scale well enough to be used on limited hardware such as a mobile device?}
+\end{itemize}
+
+
 
 \section{Research delimitations}
 \label{sec:Research delimitations}
 
-The thesis work is limited to 20 weeks, this means that there will be some delimitations.
-The mobile platform chosen will be Android since it's support for OpenGL and Vulcan. Android API level 23 will be used since only the latest cellphones will have access to the GPUs necessary.
+Thesis work is limited to 20 weeks, this means that there will be some delimitations described below in this section.
+
+Android is the mobile platform of choice, since it supports both \gls{ogles}, \gls{ocl} and Vulcan. Android \acrshort{api} level 23 will be used since only the latest versions have support of the latest \gls{ogles} versions and Vulcan.
+
+Even though it is very tempting to try to implement a solution using Vulcan to really make the most out of the limited hardware, it would probably take a larger share of the time than is justified. Instead development of the algorithm will be done using \gls{ogles} 3.1 + \gls{aep} or \gls{ogles} 3.2, depending on which is available. This should allow for faster development and more focus on the algorithm in question.
+
+%TODO: Limitations in the method chosen
 
 \section{Approach}
 \label{sec:Approach}
 
-
+%TODO: Describe method chosen and which order stuff will be made in.
 
 \section{Time plan}
 \label{sec:Time plan}
@@ -110,17 +100,17 @@ Project start: Week 6
 Half-time check: Week 16
 Final presentation: Week 26
 
-At the half-time check an application running on the mobile device rendering the scene should be completed. The global illumination algorithm should be well under way.
+At the half-time check an application running on the mobile device rendering the scene should be completed. The \gls{gi} algorithm should be well under way.
 
 The following sections of the report shall be completed:
 \begin{itemize}
   \item Introduction
   \item Background
   \item Global Illumination
-  \item Framework
+  \item Framework:\@ \gls{ogles} on Android
 \end{itemize}
 
-A detailed time plan can be found in appendix A.
+A detailed time plan can be found in appendix A\@.
 
 \bibliographystyle{plain}
 \bibliography{references}
