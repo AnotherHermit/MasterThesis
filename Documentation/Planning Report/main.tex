@@ -10,10 +10,13 @@
 
 \usepackage{hyperref}
 \usepackage{glossaries}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{references.bib}
+
 
 \input{glossary.tex}%
 
-\title{Planning Report \\ \small{Version 0.1}}
+\title{Planning Report \\ \small{Version 0.2}}
 \author{Conrad Wahlén \\ \texttt{conwa099@student.liu.se}}
 \date{\today}
 
@@ -29,13 +32,24 @@
 
 The preliminary title for this master's thesis will be:
 
-%TODO: Set title to method chosen
-\acrlong{gi} using \ldots in Real-Time on Mobile Devices
+\textit{\acrlong{gi} using \acrlong{vct} on Mobile Devices}
 
 \section{Background}
 \label{sec:Background}
 
 This master's thesis will be conducted on the behalf of Mindroad.
+
+One of the most important parts of 3D rendering is the illumination since it grounds objects in the scene. Even though computing realistic lighting has been a goal of 3D rendering since the beginning of computer graphics there is still a lot of work to be done. Since the problem is so computationally heavy the really good looking solutions are not close to running in real time.
+In the recent years however due to the increasing performance of hardware and some novel methods of approximating the scenes for lighting interactive methods for gi has been demonstrated. A very well written overview of the field 5 years ago can be found in~\cite{sotagi}.
+
+The difficult part of illumination is the light bouncing and interacting with a lot of surfaces in the scene. So in order to model it, this behavior needs to be simulated or approximated in some way. If a really heavy approximation can be made the result could be something like AO, which only guesses where in the scene there would be less light.
+
+A short demonstration of what bouncing light adds to the scene can be seen in the figures below. The bouncing light can be decently modeled with AO and an ambient light term for areas of the scene not in direct view of any light sources. However in this thesis a different model will be implemented which does not rely on such approximations.
+
+Most techniques for gi does not run in real-time but recently a few of them have been demonstrated to run in real-time on high-end hardware. This thesis will investigate if the voxel cone tracing method scales down all the way to mobile level hardware.
+
+Since the dawn of VR and AR is just upon us it would be of huge value if the devices that we put on our heads manage to produce impressive graphics without having to rely on server side graphics like described in~\cite{cloudlight}. While the idea of calculating graphics and lighting on a server and basically streaming the content to clients is very interesting, it does have a lot of limiting factors mainly when it comes to network connection.
+Seeing where the limit is on this generations mobile devices is therefore still a relevant question, especially with Vulcan entering the picture.
 
 \gls{gi} tries to model the effects of light in a 3D scene.
 
@@ -58,24 +72,22 @@ The direct light is a scene is usually quite simple and can be done for quite a 
 The problem statements for this thesis work will be:
 
 \begin{itemize}
-  %TODO: Insert the actual method here
-  \item \textit{How far can we take \gls{gi} on mobile devices using \ldots?}
+  \item \textit{How far can we take \gls{gi} on mobile devices using \gls{vct}?}
 \end{itemize}
 
-Previous results from~\cite{gimobile} show that \gls{gi} in real-time is possible on mobile devices using \glspl{vpl}. While this is a different method from \ldots it does
+Previous results from~\cite{gimobile} show that \gls{gi} in real-time is possible on mobile devices using \glspl{vpl}. Even though the results are quite recent the pace of improvement in mobile computational power means that there should be room for more advanced approaches, like \gls{vct}.
 
 \begin{itemize}
   \item \textit{What are the limiting factors of the mobile device? And are there any potential benefits on using mobile devices for \gls{gi}?}
 \end{itemize}
 
-The hardware structure on the mobile platforms are quite different from the desktop variant. Using a combined memory and very limited shared memory (if at all) between \gls{gpu} cores makes it necessary to adapt the code.
+The hardware structure on the mobile platforms are quite different from the desktop variant. Using a combined memory and very limited shared memory (if at all) between \gls{gpu} cores makes it necessary to adapt the code and the algorithms used.
 
 \begin{itemize}
-  %TODO: Insert the actual method here
-  \item \textit{Does \ldots scale well enough to be used on limited hardware such as a mobile device?}
+  \item \textit{Does \gls{vct} scale well enough to be used on limited hardware such as a mobile device?}
 \end{itemize}
 
-
+vct does have parameters that can be tuned for reaching higher performance. The number of cones traced is one which affects how much detail will be in the lights and shadows. Number of bounces makes a large difference on performance and the quality of the scene. Voxel resolution makes a difference for the amount of data that has to be searched when tracing and also the memory footprint of the algorithm overall.
 
 \section{Research delimitations}
 \label{sec:Research delimitations}
@@ -86,7 +98,17 @@ Android is the mobile platform of choice, since it supports both \gls{ogles}, \g
 
 Even though it is very tempting to try to implement a solution using Vulcan to really make the most out of the limited hardware, it would probably take a larger share of the time than is justified. Instead development of the algorithm will be done using \gls{ogles} 3.1 + \gls{aep} or \gls{ogles} 3.2, depending on which is available. This should allow for faster development and more focus on the algorithm in question.
 
-%TODO: Limitations in the method chosen
+%TODO: Limitations in the method chosen, talk to Ingemar.
+
+Since vct is quite complex and the focus is to make a optimized version running on a mobile device, there will be some delimitations.
+
+The scenes rendered will contain no dynamic objects. The lights and the camera will be completely dynamic however. This means that the voxelization can be made either on the desktop or just once before the program starts. This probably depends largely on the performance of the voxelization implemented.
+
+There will only be a single bounce of the light, this will be slighly compensated by an ambient term instead.
+
+The scene will be very simple, only a cornell box with a few different setups to demonstrate some of the different behaviors of the light.
+\nocite{*}
+\printbibliography[heading=bibintoc, title={Litterature Base}, subtype=litbase, prefixnumbers={LB}]
 
 \section{Approach}
 \label{sec:Approach}
@@ -96,24 +118,29 @@ Even though it is very tempting to try to implement a solution using Vulcan to r
 \section{Time plan}
 \label{sec:Time plan}
 
-Project start: Week 6
-Half-time check: Week 16
-Final presentation: Week 26
+Project start: Week 6 \\
+Half-time check: Week 16 \\
+Final presentation: Week 33--34 (delayed because of summer break)
 
-At the half-time check an application running on the mobile device rendering the scene should be completed. The \gls{gi} algorithm should be well under way.
+At the half-time check an implementation running on desktop should be completed.
 
 The following sections of the report shall be completed:
 \begin{itemize}
   \item Introduction
   \item Background
   \item Global Illumination
+\end{itemize}
+
+The following sections should have been started:
+\begin{itemize}
   \item Framework:\@ \gls{ogles} on Android
+  \item Voxel Cone Tracing
+  \item Results
 \end{itemize}
 
 A detailed time plan can be found in appendix A\@.
 
-\bibliographystyle{plain}
-\bibliography{references}
+\printbibliography%
 
 \newpage
 
@@ -121,6 +148,8 @@ A detailed time plan can be found in appendix A\@.
 
 \section{Detailed time plan}
 \label{app:timeplan}
+
+
 
 \end{appendices}
 \end{document}
