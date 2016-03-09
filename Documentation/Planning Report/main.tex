@@ -10,7 +10,11 @@
 
 \usepackage{hyperref}
 \usepackage{glossaries}
-\usepackage[backend=biber,style=ieee]{biblatex}
+\usepackage[
+    backend=biber,
+    style=ieee,
+    defernumbers=true]
+    {biblatex}
 \addbibresource{references.bib}
 
 
@@ -107,8 +111,7 @@ The scenes rendered will contain no dynamic objects. The lights and the camera w
 There will only be a single bounce of the light, this will be slighly compensated by an ambient term instead.
 
 The scene will be very simple, only a cornell box with a few different setups to demonstrate some of the different behaviors of the light.
-\nocite{*}
-\printbibliography[heading=bibintoc, title={Litterature Base}, subtype=litbase, prefixnumbers={LB}]
+
 
 \section{Approach}
 \label{sec:Approach}
@@ -140,7 +143,12 @@ The following sections should have been started:
 
 A detailed time plan can be found in appendix A\@.
 
-\printbibliography%
+\begin{refsection}
+\nocite{*}
+\printbibliography[heading=bibnumbered, title={Litterature Base}, subtype=litbase, prefixnumbers={LB}]
+\end{refsection}
+
+\printbibliography[heading=bibnumbered, notsubtype=litbase]
 
 \newpage
 
