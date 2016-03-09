@@ -1,6 +1,6 @@
 Other interesting papers
 
-@proceeding{gimobile,
+@inproceedings{gimobile,
   author = {Ahn, Minsu and Ha, Inwoo and Lee, Hyong-Euk and Kim, James D. K.},
   title = {
   Real-time global illumination on mobile device
@@ -8,7 +8,7 @@ Other interesting papers
   journal = {Proc. SPIE},
   volume = {9030},
   number = {},
-  pages = {903005-903005-5},
+  pages = {903005--903005-5},
   abstract = {
   We propose a novel method for real-time global illumination on mobile devices. Our approach is based on instant radiosity, which uses a sequence of virtual point lights in order to represent the e ect of indirect illumination. Our rendering process consists of three stages. With the primary light, the rst stage generates a local illumination with the shadow map on GPU The second stage of the global illumination uses the re ective shadow map on GPU and generates the sequence of virtual point lights on CPU. Finally, we use the splatting method of Dachsbacher et al 1 and add the indirect illumination to the local illumination on GPU. With the limited computing resources in mobile devices, a small number of virtual point lights are allowed for real-time rendering. Our approach uses the multi-resolution sampling method with 3D geometry and attributes simultaneously and reduce the total number of virtual point lights. We also use the hybrid strategy, which collaboratively combines the CPUs and GPUs available in a mobile SoC due to the limited computing resources in mobile devices. Experimental results demonstrate the global illumination performance of the proposed method.
   },
