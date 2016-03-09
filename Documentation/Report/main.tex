@@ -9,9 +9,14 @@
   sharecounter,nobreak,definition=marks,%  See comments in the results chapter of this document for more information on these options!
   %numbers, % If you want to cite references by numbers, use this option.
   noparts% Use option 'noparts' if you do not make use of part divisions.
-]{rtthesis}
+]{rtthesis/rtthesis}
+
+
 
 \usepackage{mythesis}
+
+\graphicspath{{fig/}}
+\usepackage{subfiles}
 
 \begin{document}
 \selectlanguage{english}
@@ -19,23 +24,23 @@
 \maketitle
 
 \begin{abstract}[english]
-  \input{en-abstract}
+  \subfile{sections/en-abstract}
 \end{abstract}
 
-\input{thanks}
+\subfile{sections/thanks}
 
 \tableofcontents
-\input{notation}
+\subfile{sections/notation}
 
 \mainmatter%
 
-\input{introduction}
-\input{results}
-\input{conclusion}
+\subfile{sections/introduction}
+\subfile{sections/results}
+\subfile{sections/conclusion}
 
 \part*{Appendix}
 \appendix
-\input{details}
+\subfile{sections/details}
 
 \clearemptydoublepage%
 

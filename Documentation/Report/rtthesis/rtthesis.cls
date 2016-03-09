@@ -84,10 +84,10 @@
 \def\thesis@url{}
 %%% Master's thesis subject.
 \define@key{rtthesis}{subject}{\def\thesis@subject{#1}}
-\def\thesis@subject{\emph{Ämnesområde}}
+\def\thesis@subject{\emph{ï¿½mnesomrï¿½de}}
 %%% Site where master's thesis work was carried out.
 \define@key{rtthesis}{site}{\def\thesis@site{#1}}
-\def\thesis@site{\emph{Företag}}
+\def\thesis@site{\emph{Fï¿½retag}}
 %%% City to appear on title page etc
 \define@key{rtthesis}{city}{\def\thesis@city{#1}}
 \def\thesis@city{}
@@ -125,7 +125,7 @@
 \define@key{rtthesis}{localID}{\def\local@ID{#1}}
 %%%Publisher.
 \define@key{rtthesis}{publisher}{\def\publishername{#1}}
-\def\publishername{LiU-Tryck, Linköping, Sweden}
+\def\publishername{LiU-Tryck, Linkï¿½ping, Sweden}
 %%% Mail
 \define@key{rtthesis}{username}{\gdef\u@name{#1}}
 %%% Dedication
@@ -182,7 +182,7 @@
   \fi\fi\fi\fi
   \AtBeginDocument{%
     \ifx\thesis@city\@empty
-    \def\thesis@city{Linköping}%
+    \def\thesis@city{Linkï¿½ping}%
     \fi}
 }
 
@@ -830,7 +830,7 @@
 % don't know, but even if I did, this seems like a detail of implementation and not something that this class should rely on.
 \ifrt@InputEncUTF
 \RequirePackage[utf8]{inputenc}
-\RequirePackage{rtthesis-utf8-ext}% Add additional characters.
+\RequirePackage{rtthesis/rtthesis-utf8-ext}% Add additional characters.
 \else
 \RequirePackage[latin1]{inputenc}
 \fi
@@ -838,10 +838,10 @@
 \RequirePackage[swedish, english]{babel}
 \AtBeginDocument{\relax\selectlanguage{english}}% Can't see why the \relax is needed here.  However, it really was needed at one point, so be very careful if you plan to remove it!  Hint: to detect problems after removing it, select a language that does not exist, turn off the hyperref option, and play around with other options as well, and make sure that the document always fails to compile due to the bad language name.
 
-\RequirePackage{rtthesis-papers}
+\RequirePackage{rtthesis/rtthesis-papers}
 
-\RequirePackage{rtthesis-captions}
-\RequirePackage{rtthesis-papers-captions}
+\RequirePackage{rtthesis/rtthesis-captions}
+\RequirePackage{rtthesis/rtthesis-papers-captions}
 
 
 %%% Theorem environments %%%
@@ -852,10 +852,10 @@
 \PassOptionsToPackage{nosharecounter}{rtthesis-theorems}%
 \fi
 \ifrt@deftheorems
-\RequirePackage{rtthesis-theorems}% Load after parskip!
+\RequirePackage{rtthesis/rtthesis-theorems}% Load after parskip!
 \fi
 
-\RequirePackage{rtthesis-example}% Load after parskip!
+\RequirePackage{rtthesis/rtthesis-example}% Load after parskip!
 
 
 % Page headers
