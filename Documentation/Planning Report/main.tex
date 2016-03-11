@@ -8,7 +8,7 @@
 %\usepackage[compact]{titlesec} % Less space around headings with this
 %\usepackage{endfloat} % Put figures last with this
 
-\usepackage{hyperref}
+%\usepackage{hyperref}
 \usepackage{glossaries}
 \usepackage[
     backend=biber,
@@ -20,7 +20,7 @@
 
 \input{glossary.tex}%
 
-\title{Planning Report \\ \small{Version 0.2}}
+\title{Planning Report \\ \small{Version 0.5}}
 \author{Conrad Wahlén \\ \texttt{conwa099@student.liu.se}}
 \date{\today}
 
@@ -85,24 +85,25 @@ Previous results from~\cite{gimobile} show that \gls{gi} in real-time is possibl
   \item \textit{What are the limiting factors of the mobile device? And are there any potential benefits on using mobile devices for \gls{gi}?}
 \end{itemize}
 
-The hardware structure on the mobile platforms are quite different from the desktop variant. Using a combined memory and very limited shared memory (if at all) between \gls{gpu} cores makes it necessary to adapt the code and the algorithms used.
+The hardware structure on the mobile platforms are quite different from desktop hardware. Using a combined memory model and very limited shared memory (if any) between \gls{gpu} cores makes it necessary to adapt the code and the algorithms used.
 
 \begin{itemize}
   \item \textit{Does \gls{vct} scale well enough to be used on limited hardware such as a mobile device?}
 \end{itemize}
 
-vct does have parameters that can be tuned for reaching higher performance. The number of cones traced is one which affects how much detail will be in the lights and shadows. Number of bounces makes a large difference on performance and the quality of the scene. Voxel resolution makes a difference for the amount of data that has to be searched when tracing and also the memory footprint of the algorithm overall.
+\gls{vct} have parameters that can be tuned between speed and quality. The number of cones and their angles makes a large differene for the result both in the quality and speed but also different effects. The voxelization in particular can make a large difference for the performance, from using a static scene and no per frame updates to voxelizing the complete scene per frame.
 
 \section{Research delimitations}
 \label{sec:Research delimitations}
 
 Thesis work is limited to 20 weeks, this means that there will be some delimitations described below in this section.
 
-Android is the mobile platform of choice, since it supports both \gls{ogles}, \gls{ocl} and Vulcan. Android \acrshort{api} level 23 will be used since only the latest versions have support of the latest \gls{ogles} versions and Vulcan.
+Android is the mobile platform of choice, since it supports both \gls{ogles}, \gls{ocl} and Vulcan. Android \acrshort{api} level 23 will be used since only the latest versions have support of the latest \gls{ogles} versions and Vulcan .
 
-Even though it is very tempting to try to implement a solution using Vulcan to really make the most out of the limited hardware, it would probably take a larger share of the time than is justified. Instead development of the algorithm will be done using \gls{ogles} 3.1 + \gls{aep} or \gls{ogles} 3.2, depending on which is available. This should allow for faster development and more focus on the algorithm in question.
+Development of the algorithm will be done using \gls{ogles} 3.1 + \gls{aep} This should allow for faster development and more focus on the algorithm in question.
 
-%TODO: Limitations in the method chosen, talk to Ingemar.
+
+
 
 Since vct is quite complex and the focus is to make a optimized version running on a mobile device, there will be some delimitations.
 
@@ -116,7 +117,79 @@ The scene will be very simple, only a Cornell box with a few different setups to
 \section{Approach}
 \label{sec:Approach}
 
-%TODO: Describe method chosen and which order stuff will be made in.
+The first priority in this thesis will be speed, so that a scene of reasonable size can be rendered in 30 fps on recent mobile hardware, using \gls{vct} for \gls{ao}, direct light, soft shadows, indirect light and specular light. The second priority will be to make the scene as dynamic as possible, allowing both dynamic lights and dynamic objects. The third priority will be to decrease any potential graphical errors and increase the visual quality of the scene. 
+
+There are two major steps in \gls{vct}. First the scene needs to be voxelized and the data in the scene needs to be stored in some way. This can be done in several different ways which have been investigated and will be explained in short below.
+
+Second the voxel data should be traced which is pretty straight forward, however there are some considerations, which have implications for the first step.
+
+\subsection{Voxelization}
+
+As the voxelization of the scene in crucial for the tracing part it is important that a good result is reached in this step. Below three different approaches will be explained in short and a suggested approach for how this will be implemented in this thesis. 
+
+\subsubsection{Rasterization}
+
+This approach to voxelization utilizes the standard GPU pipeline to rasterize triangles into 3D textures. There are some variants depending on how accurate the result needs to be. This approach seems to be quite standard for most that need voxelization. Usually implementing a conservative rasterization to produce a watertight 6-connected voxel model. This approach basically loops over fragments that kind of correspond to voxels in this case.
+
+The major drawback of this approach seems to be in cases where the scene contains many small triangles that fit inside the same voxel since this will lead to collisions when writing the voxel data, since the data is not the ideal for atomic operations this will lead to a very slow voxelization process. However, the voxelization of a scene is to approximate which makes voxelization of dense models unlikely and should be avoided in any case. 
+
+\subsubsection{Compute}
+
+The compute approach is instead performed by iterating over triangles and checking intersections with voxels.
+
+This has the benefit of being very fast when it comes to small triangles that fit within the same voxel, but does instead show quite bad performance on scenes with very large triangles. This makes it less suitable for environment scenes which are likely to contain walls and other flat surfaces consisting of very large triangles. 
+
+\subsubsection{Hybrid}
+
+The hybrid approach takes the best of the two previous methods and combines them into a 2-pass approach where the small triangles are handled by the compute method and the large ones by the rasterization method. The result is an approach that is faster that both when it comes to environment scenes which is the type of interest in this case, in \cite{phdthesis} close to a factor 10 speedup could be reached for the sponza scene for example.
+
+\subsubsection{Conclusion}
+
+The rasterization approach seems to be the one with minimal effort for maximum effect and will be implemented first. The use of implementing the compute approach seems limited on its own and will only be implemented if a need for the hybrid approach seems of use. Since most of the scene does not need to be revoxelized each iteration and the cost of voxelizing the whole scene is very costly, focus will first be put towards only updating dynamic objects without causing a complete revoxelization.
+
+\subsection{Data storage}
+
+During the voxelization process some data from the model, for example color, opacity, normals, etc., should be stored somehow so that it can be used in the tracing step. There are several different approaches on this from different authors and a couple of them will be described below.
+
+\subsubsection{Sparse Voxel Octree}
+
+This is the approach in one of the first real time implementations of \gls{vct}. It requires an implementation of a GPU based octree structure which is supposed to minimize the amount of data needed since the empty voxels dont take any storage space. However, it is very complex to construct and not very dynamic.
+
+\subsubsection{Mipmaps}
+
+In this approach the data is simply stored in 3D textures that can be mipmaped easily using OpenGL functions. The drawback of this approach is that it takes quite a lot of memory if a lot of different values should be stored and is not very dynamic. However, by constructing a active-voxel list in the voxelization step only the active voxels need to be updated when lights used for direct lighing change. A similar approach could be done for objects that keep a reference to the voxels they are part of so that those voxels can be removed when the object moves.
+
+\subsubsection{Clipmaps}
+
+This is a modification of the mipmaps but instead of storing the whole range for more detailed levels they are instead clipped by distance. This means that there is far less data used and which could instead be used on increasing the detail in the area closest to the camera. Using this approach removes the benefit of using the OpenGL mipmapping though and must be done manually instead. Since this approach is closely related to the mipmapping a similar active list could possibly be used to increase the updating of the structure. The drawback of this approach is supposed to be flickering effects on smaller objects that are far from the camera, this is something that could be investigated.
+
+\subsubsection{Conclusion}
+
+Since this project is focused on making a quite complex method work on limited hardware keepig it simple seems like a good approach. Starting by implementing simple mipmapping seems like a good first step which can later be improved by using a clipmap.
+
+\subsection{Sampling}
+
+The data that should be saved is primarily the color and opacity of the voxel. This could be improved upon by saving different colors for different directions, usually this means either isotropic (single color) or anisotropic (directional color). There is another way of storing directional information, spherical harmonics. However, the problems with isotropic color seems quite limited and the largest error seems to be light leaking. Since the focus is on speed and preferable dynamic scenes over visually correct ones the effort and computational cost of implementing directional data will be saved and focused on if the time allows.
+
+\subsection{Direct Light}
+
+To inject light into the scene for the first bounce of light there are several different methods with different drawbacks and benefits. The simplest solution is to use a simple shadowmap from the direct lightsources and set the voxels visible in the shadowmap as emitting in the tracing step. The drawback of this mehtod is if the shadowmap has too low resolution or the angle is too steep only a few voxels will be colored. The solution to this would be to instead sample the shadowmap from each voxel. This could lead to artifacts and light leaking especially for voxels in the distance using clipmaps. A third approach would instead be to perform a tracing from each voxel toward each light source. Since this is what is done to do a shadowtracing anyways it could be used here too.
+
+\subsection{Indirect Diffuse Light}
+
+To calculate the indirect light a cone trace is performed for each pixel visible in the camera. Special consideration needs to be takes so that sampling starts far enough away to not sample from the starting voxel. The specialized method for sampling described in \cite{phdthesis} seems to work very well and also has a nice side effect of not needing to interpolate between mipmap levels when the cone angle is 60 degrees (which they will be for diffuse light and \gls{ao}), this could make it simpler to implement the clipmaps.
+
+\subsection{\acrlong{ao}}
+
+To calculate \gls{ao} the same approach as for indirect diffuse light will be used but with a much shorter cutoff distance.
+
+\subsection{Specular Light}
+
+Specular light will be calculated from a single cone from a pixel. The cone angle will depend on the material properties of the surface that was struck.
+
+\subsection{Other considerations}
+
+There are many other areas that can be explored for optimization purposes for example only tracing every n:th pixel when rendering and then interpolating using a bilateral filter. 
 
 \section{Time plan}
 \label{sec:Time plan}
