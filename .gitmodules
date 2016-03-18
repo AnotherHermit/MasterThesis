@@ -1,3 +1,6 @@
 [submodule "Documentation/ThesisReport"]
 	path = Documentation/ThesisReport
 	url = https://github.com/AnotherHermit/ThesisReport.git
+[submodule "VoxelConeTracing"]
+	path = VoxelConeTracing
+	url = https://github.com/AnotherHermit/VoxelConeTracing.git
