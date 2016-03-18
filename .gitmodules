@@ -1,0 +1,3 @@
+[submodule "Documentation/ThesisReport"]
+	path = Documentation/ThesisReport
+	url = https://github.com/AnotherHermit/ThesisReport.git
